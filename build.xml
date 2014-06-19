@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="Sample usage of Salesforce Ant tasks" default="" basedir="." xmlns:sf="antlib:com.salesforce">
+	<!-- Properties file -->
+	<property file="build.properties"/>
+    <property environment="env"/>
+	<!-- Proxy -->
+	<setproxy proxyhost="www-proxy.si.fr.atosorigin.com" proxyport="8080"/>
+	
+	<tstamp>
+		<format property="datetime" pattern="dd.MM.yyyy 'at' HH-mm-ss" />
+	</tstamp>
+	
+	
+	<!-- ####################  SANDBOX PERSO #################### -->
+	<!-- ######################################################## -->
+	
+    <!-- The file PERSO Sandbox/unpackaged/package.xml lists what is to be retrieved -->
+    <target name="PERSO_retrieveAllObject">
+		<mkdir dir="${var.safe}/PERSO/retrieveAllObject ${datetime}"/>
+		<!-- Retrieve the contents into another directory -->
+		<sf:retrieve username="${perso.username}" password="${perso.password}" serverurl="${perso.serverurl}" maxPoll="${perso.maxPoll}" retrieveTarget="${var.safe}/PERSO/retrieveAllObject ${datetime}" unpackaged="PERSO Sandbox/package-PERSO_RetrieveAllObject.xml"/>
+    </target>
+	
+	<!-- Deploy the set of metadata retrieved with retrieveAllComponents -->
+    <target name="deployAllComponents">
+		<sf:deploy username="${perso.username}" password="${perso.password}" serverurl="${perso.serverurl}" maxPoll="${perso.maxPoll}" deployRoot="${perso.deployRoot}"/>
+    </target>
+	
+	<!-- ############## SAUVEGARDE SANDBOX CCF ############## -->
+	<!-- #################################################### -->
+	<target name="CCF_RetrieveAllCommonObject">
+		<mkdir dir="${var.safe}/CCF/retrieveCommonObject ${datetime}"/>
+		<sf:retrieve username="${ccf.username}" password="${ccf.password}" serverurl="${ccf.serverurl}" maxPoll="${ccf.maxPoll}" retrieveTarget="${var.safe}/CCF/retrieveCommonObject ${datetime}" unpackaged="CCF Sandbox/package-CCF_RetrieveCommonObject.xml"/>
+    </target>
+</project>
